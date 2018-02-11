@@ -1,6 +1,6 @@
 import UIKit
 
-class CollectionViewCell: UICollectionViewCell {
+final class CollectionViewCell: UICollectionViewCell {
 
     @IBOutlet weak var pageImageView: UIImageView!
     @IBOutlet weak var descriptionTextView: UITextView!
