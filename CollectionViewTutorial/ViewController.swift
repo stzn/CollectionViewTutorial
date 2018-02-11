@@ -1,11 +1,3 @@
-//
-//  ViewController.swift
-//  CollectionViewTutorial
-//
-//  Created by stakata on 2018/02/11.
-//  Copyright © 2018年 sztk. All rights reserved.
-//
-
 import UIKit
 
 class ViewController: UIViewController {
@@ -25,14 +17,23 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setPageControl()
-        setCollectionView()
+        setCollectionView()        
     }
     
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        collectionView.frame = view.bounds
+    }
+
     private func setCollectionView() {
         
-        collectionView.register(CollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
+        collectionView.register(UINib.init(nibName: reuseIdentifier, bundle: nil), forCellWithReuseIdentifier: reuseIdentifier)
         collectionView.dataSource = self
         collectionView.delegate = self
+        
+        if #available(iOS 11.0, *) {
+            collectionView.contentInsetAdjustmentBehavior = .never
+        }
     }
     private func setPageControl() {
         pageControl.currentPage = 0
@@ -59,12 +60,8 @@ extension ViewController {
         coordinator.animate(alongsideTransition: { _ in
             
             self.collectionView.collectionViewLayout.invalidateLayout()
-            if self.pageControl.currentPage == 0 {
-                self.collectionView.contentOffset = .zero
-            } else {
-                let indexPath = IndexPath(row: self.pageControl.currentPage, section: 0)
-                self.collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
-            }
+            let indexPath = IndexPath(row: self.pageControl.currentPage, section: 0)
+            self.collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
         })
     }
     
@@ -91,7 +88,7 @@ extension ViewController: UICollectionViewDataSource {
         
         let item = tutorials[indexPath.item]
         
-        cell.tutorial = item
+        cell.configure(tutorial: item)
         return cell
     }
     
